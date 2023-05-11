@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Burger Detector</title>
+</head>
+<body>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="screenshot">
+        <br><br>
+        <button type="submit">Распознать</button>
+    </form>
+</body>
+</html>
