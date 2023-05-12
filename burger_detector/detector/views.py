@@ -6,7 +6,6 @@ import time
 import cv2
 
 
-
 def detect_burger(request):
     if request.method == 'POST' and request.FILES['screenshot']:
         screenshot = request.FILES['screenshot']
@@ -15,7 +14,10 @@ def detect_burger(request):
         uploaded_file_url = fs.url(filename)
         full_path = os.path.join(settings.BASE_DIR, uploaded_file_url[1:])
         start_time = time.time()
-        result_img = detect_burger_menu(full_path)
+        try:
+            result_img = detect_burger_menu(full_path)
+        except AttributeError:
+            return render(request, 'index.html', {'error_message': 'Файл не является изображением'})
         end_time = time.time()
         elapsed_time = end_time - start_time
         return render(request, 'result.html', {
@@ -28,22 +30,25 @@ def detect_burger(request):
 
 def detect_burger_menu(full_path):
     img = cv2.imread(full_path)
+    if img is None:
+        raise AttributeError('Файл не является изображением')
     height, width, _ = img.shape
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     thresh = cv2.adaptiveThreshold(gray, 200, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 11, 2)
-    top_thresh = int(height * 0.4)
+    top_thresh = int(height * 0.3)
     contours, hierarchy = cv2.findContours(thresh[:top_thresh, :], cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     for contour in contours:
         area = cv2.contourArea(contour)
-        if area > 500:
+        if area > 200:
             x, y, w, h = cv2.boundingRect(contour)
             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
     file_path, file_name = os.path.split(full_path)
     file_name, file_ext = os.path.splitext(file_name)
-    save_path = os.path.join(file_path, 'red_menu', f'{file_name}_red{file_ext}')
+    save_path = os.path.join(file_path, 'red_menu', f'{file_name}{file_ext}')
 
     if not os.path.exists(os.path.dirname(save_path)):
         os.makedirs(os.path.dirname(save_path))
     cv2.imwrite(save_path, img)
     return img
+

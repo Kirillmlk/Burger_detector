@@ -7,8 +7,8 @@
 <body>
     <h1>Результаты распознавания</h1>
     <p>Время выполнения: {{ elapsed_time }}</p>
-        <div> <img src="{{ uploaded_file_url }}" width="400"></div>
+        <img src="{{ uploaded_file_url.url }}" alt="uploaded image">
     <br><br>
-    <img src="{{ result_img }}" width="400">
+        <img src="{{ result_img }}" alt="Картинка">
 </body>
 </html>

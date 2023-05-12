@@ -1,15 +1,41 @@
 <!DOCTYPE html>
+
 <html>
 <head>
     <meta charset="utf-8">
     <title>Burger Detector</title>
+    <style>
+        /* Стили для центрирования кнопок и добавления отступа сверху */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 30vh;
+
+        }
+
+        /* Стили для кнопки "Распознать" и кнопки "Выберите файл" */
+        button[type="submit"], input[type="file"] {
+            background-color: purple;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+
+        }
+    </style>
 </head>
 <body>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="screenshot">
-        <br><br>
-        <button type="submit">Распознать</button>
-    </form>
+    <div class="container">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="screenshot">
+            <br><br>
+            <button type="submit">Распознать</button>
+        </form>
+    </div>
 </body>
 </html>
